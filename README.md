@@ -13,7 +13,7 @@ copy a design systém vychází z prototypu [`docs/severka-landing-prototyp.html
 | `img-source/` | Zdrojová PNG + návod na pojmenování |
 | `scripts/build-images.mjs` | Konverze zdrojů do `img/` (`npm run images`) |
 | `vercel.json` | Cache a bezpečnostní hlavičky pro nasazení na Vercel |
-| `docs/` | Zadání a původní prototyp (referenční, nenasazuje se) |
+| `docs/` | Zadání, původní prototyp a plán slevového systému (referenční, nenasazuje se) |
 
 ## Fotky
 
