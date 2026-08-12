@@ -29,9 +29,25 @@ generuje AVIF + WebP + JPEG v kvalitě 80 ve třech šířkách a u hero snižuj
 kvalitu AVIF, dokud se nevejde pod 120 kB kvůli LCP. Kde je hlavní motiv mimo
 střed, posouvá ořezové okno položka `focus` v tabulce `IMAGES`.
 
-**Dokud v `img-source/` nejsou zdrojová PNG, `img/` obsahuje zástupné obrázky**
-s přerušovaným rámečkem a názvem souboru. Drží správné rozměry (CLS = 0), ale
-do produkce nepatří.
+Chybějící zdroj se nahradí označeným zástupným obrázkem správných rozměrů, aby
+stránka fungovala a měla CLS = 0.
+
+> **Zdroje jsou zatím jen kopie z chatu** (1408 × 768 px, u těsnicí sady
+> 1024 × 1024). Build proto u největších variant nezvětšuje a soubor vygeneruje
+> v původní velikosti — vypíše to jako varování. Pro ostrý provoz dodej
+> originály z generátoru v plném rozlišení a spusť `npm run images` znovu.
+
+## Hero video
+
+Hero fotku může překrýt dekorativní smyčka. Vloží se z JS a jen tehdy, když
+dává smysl — ne na mobilu, ne při `prefers-reduced-motion`, ne v úsporném
+režimu dat, nikdy bez JS. Dokud se nepřehrává, zůstává vidět fotka, takže
+chybějící soubor nic nerozbije.
+
+Nahraj `img/hero-loznice.webm` a `img/hero-loznice.mp4`:
+smyčka 6–10 s, **bez zvukové stopy**, ideálně do 3 MB, ořez snese 3:2
+(`object-fit: cover`). Do té doby se v konzoli objeví jeden neúspěšný request
+na `hero-loznice.mp4`.
 
 ## Spuštění a nasazení
 
@@ -60,9 +76,10 @@ Lighthouse 13 (headless Chromium, lokální server, mobile i desktop preset):
 \* Jediný odečet je „errors in console“ — v testovacím sandboxu není dostupná síť pro
 `fonts.googleapis.com`. Po nasazení se fonty načtou a audit projde čistý.
 
-LCP 0,9 s · **CLS 0** · TBT 20 ms. axe-core: **0 porušení** na 1280 px i 360 px
-(rozbalené FAQ, odkryté sekce). Měřeno se zástupnými obrázky — po dodání reálných
-fotek změř znovu, hlavně LCP; limit 120 kB na hero AVIF hlídá build skript.
+LCP 1,1 s · **CLS 0** · celkem 69 kB přenesených dat (mobile). axe-core:
+**0 porušení** na 1280 px i 360 px (rozbalené FAQ, odkryté sekce). Měřeno
+s reálnými fotkami; hero AVIF má 63 kB, limit 120 kB hlídá build skript.
+Po přidání hero videa změř LCP znovu.
 
 ## Rozhodnutí a odchylky od zadání
 
@@ -101,7 +118,8 @@ Stránka se nesmí nasadit, dokud se nevybere jedna z variant:
 - [ ] Doplnit provozovatele v patičce (jméno, IČO, adresa) a odkazy na OP / reklamační řád / GDPR
 - [ ] Nahradit zástupné recenze reálnými (Ověřeno zákazníky) — pak lze doplnit `aggregateRating`
 - [ ] Nahradit `canonical` a absolutní URL v `og:image` / JSON-LD reálnou doménou
-- [ ] Dodat zdrojová PNG do `img-source/` a spustit `npm run images` (teď jsou v `img/` zástupné obrázky)
+- [ ] Dodat originály fotek v plném rozlišení do `img-source/` a spustit `npm run images`
+- [ ] Nahrát hero video (`img/hero-loznice.webm` + `.mp4`), nebo z `index.html` odstranit blok, který ho vkládá
 - [ ] Vyřešit konflikt 1330 W / 1,0 kW (viz výše) — bez toho stránku nenasazovat
 - [ ] Ověřit reálný stav skladu v microcopy („Skladem 14 ks“)
 

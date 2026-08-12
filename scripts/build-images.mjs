@@ -49,12 +49,26 @@ async function crop(file, w, h, [rw, rh], focus = [0.5, 0.5]) {
   if (ch > sh) { ch = sh; cw = Math.round((ch * rw) / rh); }
   const left = Math.round((sw - cw) * focus[0]);
   const top = Math.round((sh - ch) * focus[1]);
-  return sharp(file).extract({ left, top, width: cw, height: ch }).resize(w, h);
+  if (w > cw) upscaled.push(`${path.basename(file)} → ${w} px (zdroj má po ořezu jen ${cw} px)`);
+  return sharp(file)
+    .extract({ left, top, width: cw, height: ch })
+    .resize(w, h, { withoutEnlargement: true });
 }
 
 const checkOnly = process.argv.includes('--check');
 const height = (w, [rw, rh]) => Math.round((w * rh) / rw);
-const sourceFile = (src) => path.join(SRC, `${src}.png`);
+
+/** Zdroj hledáme v běžných formátech — generátor umí PNG, chat i WebP. */
+const EXTS = ['png', 'webp', 'jpg', 'jpeg'];
+const sourceFile = (src) => {
+  for (const e of EXTS) {
+    const p = path.join(SRC, `${src}.${e}`);
+    if (existsSync(p)) return p;
+  }
+  return path.join(SRC, `${src}.png`); // neexistuje — název pro hlášku
+};
+const hasSource = (src) => EXTS.some((e) => existsSync(path.join(SRC, `${src}.${e}`)));
+const upscaled = [];
 
 /** Zástupný obrázek — světlé pozadí, přerušovaný rámeček, název souboru. */
 function placeholder(w, h, label) {
@@ -95,17 +109,17 @@ async function encode(pipeline, base, isHero) {
 
 async function main() {
   const missing = [];
-  for (const img of IMAGES) if (!existsSync(sourceFile(img.src))) missing.push(img.src);
+  for (const img of IMAGES) if (!hasSource(img.src)) missing.push(img.src);
 
   if (checkOnly) {
     const unique = [...new Set(IMAGES.map((i) => i.src))];
-    for (const s of unique) console.log(`${existsSync(sourceFile(s)) ? 'OK     ' : 'CHYBÍ  '} ${sourceFile(s)}`);
+    for (const s of unique) console.log(`${hasSource(s) ? 'OK     ' : 'CHYBÍ  '} ${sourceFile(s)}`);
     process.exit(missing.length ? 1 : 0);
   }
 
   await mkdir(OUT, { recursive: true });
   for (const img of IMAGES) {
-    const has = existsSync(sourceFile(img.src));
+    const has = hasSource(img.src);
     for (const w of img.widths) {
       const h = height(w, img.ratio);
       const base = path.join(OUT, `${img.name}-${w}`);
@@ -118,11 +132,16 @@ async function main() {
   }
 
   const ogBase = path.join(OUT, OG.name);
-  const ogPipe = existsSync(sourceFile(OG.src))
+  const ogPipe = hasSource(OG.src)
     ? await crop(sourceFile(OG.src), OG.width, OG.height, [40, 21], OG.focus)
     : placeholder(OG.width, OG.height, 'packshot-og 1200×630');
   await ogPipe.jpeg({ quality: Q, mozjpeg: true }).toFile(`${ogBase}.jpg`);
-  console.log(`${existsSync(sourceFile(OG.src)) ? '✓' : '·'} packshot-og           1200×630 px — og:image / twitter:image`);
+  console.log(`${hasSource(OG.src) ? '✓' : '·'} packshot-og           1200×630 px — og:image / twitter:image`);
+
+  if (upscaled.length) {
+    console.log('\nZdroj nestačí na největší variantu (soubor se vygeneroval v původní velikosti):');
+    for (const u of upscaled) console.log(`  ! ${u}`);
+  }
 
   if (missing.length) {
     console.log(`\nChybí zdroje v ${SRC}/: ${[...new Set(missing)].join(', ')}`);
