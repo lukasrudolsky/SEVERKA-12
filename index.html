@@ -599,17 +599,18 @@ footer a{color:#2F4C5E}
     document.querySelectorAll('.reveal').forEach(function(n){ n.classList.add('in'); });
   }
 
-  /* Hero video (dekorativní smyčka přes fotku).
+  /* Hero video přes fotku: místnost se v něm ochlazuje z teplé do modré, stejně
+     jako teploměr vedle. Proto se přehraje jen jednou a zůstane stát na chladném
+     konci — smyčka by skákala zpátky do horka.
      Vkládá se z JS, takže bez JS, s reduced-motion, na mobilu a při úsporném
-     režimu dat se vůbec nestahuje a zůstane fotka. Soubory: img/hero-loznice.webm
-     + .mp4 — dokud tam nejsou, request selže a fotka zůstane vidět. */
+     režimu dat se vůbec nestahuje a zůstane fotka. */
   var heroFig = document.querySelector('.shot--hero');
   var saveData = navigator.connection && navigator.connection.saveData;
   if (heroFig && !reduced && !saveData && window.matchMedia('(min-width:861px)').matches){
     var v = document.createElement('video');
     v.className = 'hero-video';
     v.muted = true; v.defaultMuted = true;
-    v.autoplay = true; v.loop = true; v.playsInline = true;
+    v.autoplay = true; v.playsInline = true;
     v.setAttribute('playsinline',''); v.setAttribute('aria-hidden','true'); v.tabIndex = -1;
     [['img/hero-loznice.webm','video/webm'],['img/hero-loznice.mp4','video/mp4']].forEach(function(s){
       var el = document.createElement('source'); el.src = s[0]; el.type = s[1]; v.appendChild(el);

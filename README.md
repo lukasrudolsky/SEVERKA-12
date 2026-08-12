@@ -39,15 +39,27 @@ stránka fungovala a měla CLS = 0.
 
 ## Hero video
 
-Hero fotku může překrýt dekorativní smyčka. Vloží se z JS a jen tehdy, když
-dává smysl — ne na mobilu, ne při `prefers-reduced-motion`, ne v úsporném
-režimu dat, nikdy bez JS. Dokud se nepřehrává, zůstává vidět fotka, takže
-chybějící soubor nic nerozbije.
+Hero fotku překrývá `img/hero-loznice.webm` (455 kB) s fallbackem
+`img/hero-loznice.mp4` (671 kB) — místnost se v něm ochlazuje z teplé do modré,
+stejně jako teploměr vedle. Proto se **přehraje jen jednou a zůstane stát na
+chladném konci**; smyčka by skákala zpátky do horka a popírala pointu stránky.
 
-Nahraj `img/hero-loznice.webm` a `img/hero-loznice.mp4`:
-smyčka 6–10 s, **bez zvukové stopy**, ideálně do 3 MB, ořez snese 3:2
-(`object-fit: cover`). Do té doby se v konzoli objeví jeden neúspěšný request
-na `hero-loznice.mp4`.
+Element se vkládá z JS a jen tam, kde dává smysl — ne na mobilu (< 861 px),
+ne při `prefers-reduced-motion`, ne v úsporném režimu dat, nikdy bez JS.
+V těch případech se nestahuje ani byte a zůstane fotka. Než se rozjede
+přehrávání, je vidět fotka pod ním, takže není co blikat.
+
+Překódování zdroje (`npm run images` se videa netýká):
+
+```bash
+ffmpeg -i zdroj.mp4 -an -c:v libx264 -profile:v high -crf 27 -preset slow \
+  -pix_fmt yuv420p -movflags +faststart img/hero-loznice.mp4
+ffmpeg -i zdroj.mp4 -an -c:v libvpx-vp9 -crf 36 -b:v 0 -row-mt 1 \
+  -deadline good -cpu-used 2 -pix_fmt yuv420p img/hero-loznice.webm
+```
+
+`-an` je podstatné: zvuková stopa je u autoplay videa zbytečná zátěž a některé
+prohlížeče kvůli ní autoplay zablokují.
 
 ## Spuštění a nasazení
 
@@ -76,10 +88,10 @@ Lighthouse 13 (headless Chromium, lokální server, mobile i desktop preset):
 \* Jediný odečet je „errors in console“ — v testovacím sandboxu není dostupná síť pro
 `fonts.googleapis.com`. Po nasazení se fonty načtou a audit projde čistý.
 
-LCP 1,1 s · **CLS 0** · celkem 69 kB přenesených dat (mobile). axe-core:
-**0 porušení** na 1280 px i 360 px (rozbalené FAQ, odkryté sekce). Měřeno
-s reálnými fotkami; hero AVIF má 63 kB, limit 120 kB hlídá build skript.
-Po přidání hero videa změř LCP znovu.
+LCP 1,1 s (mobile) / 0,3 s (desktop) · **CLS 0** · 69 kB přenesených dat na
+mobilu, 616 kB na desktopu včetně hero videa. axe-core: **0 porušení** na
+1280 px i 360 px (rozbalené FAQ, odkryté sekce). Hero AVIF má 63 kB, limit
+120 kB hlídá build skript.
 
 ## Rozhodnutí a odchylky od zadání
 
@@ -115,11 +127,11 @@ Stránka se nesmí nasadit, dokud se nevybere jedna z variant:
 
 ## TODO před ostrým spuštěním
 
+- [ ] Odstranit vodoznak generátoru (✦ vpravo dole) ze všech fotek i z hero videa
 - [ ] Doplnit provozovatele v patičce (jméno, IČO, adresa) a odkazy na OP / reklamační řád / GDPR
 - [ ] Nahradit zástupné recenze reálnými (Ověřeno zákazníky) — pak lze doplnit `aggregateRating`
 - [ ] Nahradit `canonical` a absolutní URL v `og:image` / JSON-LD reálnou doménou
 - [ ] Dodat originály fotek v plném rozlišení do `img-source/` a spustit `npm run images`
-- [ ] Nahrát hero video (`img/hero-loznice.webm` + `.mp4`), nebo z `index.html` odstranit blok, který ho vkládá
 - [ ] Vyřešit konflikt 1330 W / 1,0 kW (viz výše) — bez toho stránku nenasazovat
 - [ ] Ověřit reálný stav skladu v microcopy („Skladem 14 ks“)
 
