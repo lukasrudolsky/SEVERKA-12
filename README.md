@@ -61,6 +61,38 @@ ffmpeg -i zdroj.mp4 -an -c:v libvpx-vp9 -crf 36 -b:v 0 -row-mt 1 \
 `-an` je podstatné: zvuková stopa je u autoplay videa zbytečná zátěž a některé
 prohlížeče kvůli ní autoplay zablokují.
 
+## Kalkulačka vychlazení
+
+Sekce `#kalkulacka` je lead magnet: návštěvník zadá plochu, výšku stropu,
+orientaci oken, počet lidí a dvě zátěže navíc (podkroví, velké prosklení)
+a hned vidí potřebný chladicí výkon, dobu vychlazení o 7 °C a cenu za noc.
+
+Model tepelné zátěže je v `index.html` u komentáře „kalkulačka vychlazení“:
+základ 80 W/m² pro běžně zateplenou místnost se stropem 2,6 m, přepočtený na
+skutečnou výšku, násobený orientací oken (1 / 1,15 / 1,3), střechou nad hlavou
+(1,35) a velkým prosklením (1,15), plus 100 W na osobu. Doba vychlazení vychází
+z energie potřebné na ochlazení vzduchu, vynásobené třemi za nábytek a stěny,
+dělené výkonem, který zbude po pokrytí zátěže.
+
+Verdikt má čtyři pásma podle poměru zátěže a výkonu (3,5 kW). Pásma jsou
+posunutá dolů schválně — čím blíž je zátěž výkonu, tím pomaleji chlazení
+postupuje, u poměru kolem 0,95 už jde o hodiny. **Nad 1,1 kalkulačka řekne,
+že jednotka nestačí, a tlačítko se přepne z objednávky na srovnání se splitem.**
+Kalkulačka, které vždycky vyjde „kupte“, nikomu nepomůže a sedí to na tón
+sekce „Na rovinu“.
+
+Bez JS se sekce vůbec nezobrazí (`.calc` je skrytá, odkrývá ji třída `js`) —
+nemá smysl ukazovat formulář, který nic nespočítá.
+
+### Sběr e-mailů
+
+Pod výsledkem je připravený formulář „pošleme výpočet na e-mail“ včetně
+zaškrtávacího souhlasu se zpracováním a odkazu na ochranu osobních údajů.
+**Zobrazí se, až se v `index.html` vyplní konstanta `LEAD_ENDPOINT`** (URL
+Ecomailu nebo vlastního API). Dokud je prázdná, formulář zůstane skrytý, ať se
+nikde neobjeví pole, které nic neodešle. Odesílá se `POST` s JSON `{email,
+vypocet}`. Před spuštěním doplň odkaz na reálné znění zpracování osobních údajů.
+
 ## Spuštění a nasazení
 
 Stránka nepotřebuje server ani build — stačí otevřít `index.html` v prohlížeči.
@@ -104,7 +136,7 @@ mobilu, 616 kB na desktopu včetně hero videa. axe-core: **0 porušení** na
   sekci „Problém“ používají světlejší odstín `--heat` (#F5804F, 5,4 : 1 na tmavém pozadí).
   `--heat` se dál používá jen pro „horko/problém“ momenty.
 - **Menu v hlavičce** je nad rámec zadání (to počítalo jen s logem a CTA). Na desktopu
-  jsou to čtyři kotvy (Co získáte · Srovnání · Recenze · Časté dotazy) se zvýrazněním
+  je to pět kotev (Co získáte · Srovnání · Kalkulačka · Recenze · Časté dotazy) se zvýrazněním
   sekce, ve které se čtenář právě nachází, na mobilu panel pod hlavičkou. Zavírá se
   klikem na odkaz, Esc (fokus se vrátí na tlačítko), klikem mimo i při zvětšení okna
   nad 860 px. Bez JS zůstane hlavička v původní podobě — logo a CTA.
@@ -139,6 +171,8 @@ Stránka se nesmí nasadit, dokud se nevybere jedna z variant:
 - [ ] Dodat originály fotek v plném rozlišení do `img-source/` a spustit `npm run images`
 - [ ] Vyřešit konflikt 1330 W / 1,0 kW (viz výše) — bez toho stránku nenasazovat
 - [ ] Ověřit reálný stav skladu v microcopy („Skladem 14 ks“)
+- [ ] Napojit `LEAD_ENDPOINT` u kalkulačky a doplnit odkaz na zpracování osobních údajů
+- [ ] Nechat model kalkulačky potvrdit někým, kdo zná reálné parametry jednotky
 
 ## Fáze 2
 

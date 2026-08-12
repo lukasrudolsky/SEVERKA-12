@@ -168,6 +168,48 @@ td.hl{background:#F0F8FD;font-weight:600}
 tbody tr:last-child td,tbody tr:last-child th{border-bottom:0}
 td .sub{display:block;font-weight:400;font-size:13px;color:#546E80;margin-top:3px}
 
+/* ---------- kalkulačka ---------- */
+.calc-lead{max-width:60ch;color:var(--muted);margin-top:14px}
+.calc{display:none}                    /* bez JS je kalkulačka k ničemu, tak ji neukazujeme */
+.js .calc{display:grid;grid-template-columns:1.05fr .95fr;gap:28px;margin-top:32px;align-items:start}
+.calc-form{background:var(--surface);border:1px solid var(--mist);border-radius:var(--radius);padding:28px}
+.calc-form fieldset{border:0}
+.calc-form legend{font-family:var(--display);font-weight:700;font-size:17px;margin-bottom:18px}
+.calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px 18px}
+.calc-field{display:flex;flex-direction:column;gap:6px}
+.calc-field.wide{grid-column:1/-1}
+.calc-field label{font-size:14px;font-weight:600}
+.calc-field .hint{font-size:13px;color:var(--muted-2);font-weight:400}
+.calc-field input[type=number],.calc-field select{font-family:var(--body);font-size:16px;color:var(--ink);background:var(--bg);
+  border:1px solid var(--mist);border-radius:10px;padding:11px 13px;width:100%}
+.calc-field input[type=number]:hover,.calc-field select:hover{border-color:#B9D5E7}
+.calc-check{display:flex;align-items:flex-start;gap:10px;grid-column:1/-1;font-size:15px}
+.calc-check input{width:20px;height:20px;margin-top:1px;accent-color:var(--deep);flex:none}
+.calc-check label{font-weight:500}
+.calc-check .hint{display:block;margin-top:2px}
+.calc-out{background:var(--ink);color:#E8F2F8;border-radius:var(--radius);padding:28px;position:sticky;top:84px}
+.calc-verdict{font-family:var(--display);font-weight:800;font-size:26px;line-height:1.15;color:#fff}
+.calc-verdict.warn{color:#F5804F}
+.calc-note{margin-top:10px;font-size:15px;color:#C7D9E4}
+.calc-rows{margin-top:22px;border-top:1px solid rgba(255,255,255,.14)}
+.calc-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.14);font-size:15px}
+.calc-row dt{color:#C7D9E4}
+.calc-row dd{font-family:var(--display);font-weight:700;font-size:19px;color:#fff;font-variant-numeric:tabular-nums;text-align:right}
+.calc-out .btn{margin-top:24px;width:100%;background:#fff;color:var(--deep)}
+.calc-out .btn:hover{background:#EAF3F9}
+.calc-disclaimer{margin-top:16px;font-size:13px;color:#A9C2D2;line-height:1.5}
+/* sběr e-mailu — zobrazí se, až bude v JS vyplněný LEAD_ENDPOINT */
+.calc-lead-form{margin-top:22px;padding-top:22px;border-top:1px solid rgba(255,255,255,.14)}
+.calc-lead-form p{font-size:14px;color:#C7D9E4;margin-bottom:12px}
+.calc-lead-form .row{display:flex;gap:10px;flex-wrap:wrap}
+.calc-lead-form input[type=email]{flex:1 1 200px;font-family:var(--body);font-size:16px;padding:11px 13px;border-radius:10px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.07);color:#fff}
+.calc-lead-form input[type=email]::placeholder{color:#9FB8C9}
+.calc-lead-form .btn{margin-top:0;width:auto}
+.calc-consent{display:flex;gap:9px;align-items:flex-start;margin-top:12px;font-size:13px;color:#C7D9E4;line-height:1.5}
+.calc-consent input{width:18px;height:18px;margin-top:2px;accent-color:#fff;flex:none}
+.calc-consent a{color:#BFE0F4}
+.calc-status{margin-top:12px;font-size:14px;color:#fff}
+
 /* ---------- na rovinu ---------- */
 .honest{background:var(--surface)}
 .honest-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:38px}
@@ -229,6 +271,8 @@ footer a{color:#2F4C5E}
   .nav-menu li+li a{border-top:1px solid var(--mist)}
   .nav-menu a{display:block;padding:15px 0;font-size:16px;border-bottom:0}
   .nav-menu a[aria-current="location"]{border-bottom:0}
+  .js .calc{grid-template-columns:1fr}
+  .calc-out{position:static}
   .hero .wrap{grid-template-columns:1fr;gap:36px}
   .pain-grid,.bene-grid,.honest-grid,.rev-grid{grid-template-columns:1fr}
   .section{padding:56px 0}
@@ -264,6 +308,7 @@ footer a{color:#2F4C5E}
       <ul>
         <li><a href="#benefity">Co získáte</a></li>
         <li><a href="#srovnani">Srovnání</a></li>
+        <li><a href="#kalkulacka">Kalkulačka</a></li>
         <li><a href="#recenze">Recenze</a></li>
         <li><a href="#faq">Časté dotazy</a></li>
       </ul>
@@ -403,6 +448,81 @@ footer a{color:#2F4C5E}
         </tbody>
       </table>
     </section>
+  </div>
+</section>
+
+<!-- KALKULAČKA -->
+<section class="section flush" id="kalkulacka" aria-labelledby="calc-h">
+  <div class="wrap">
+    <span class="eyebrow">Kalkulačka</span>
+    <h2 id="calc-h">Vychladí SEVERKA vaši místnost?</h2>
+    <p class="calc-lead">Spočítejte si, jaký chladicí výkon vaše místnost potřebuje a za jak dlouho ji SEVERKA&nbsp;12 srazí o&nbsp;7&nbsp;°C. Když na ni nestačí, řekneme vám to — počítá se přímo ve vašem prohlížeči, nic nám neposíláte.</p>
+
+    <div class="calc reveal">
+      <div class="calc-form" id="calcForm">
+        <fieldset>
+          <legend>Vaše místnost</legend>
+          <div class="calc-grid">
+            <div class="calc-field">
+              <label for="calcArea">Podlahová plocha <span class="hint">m²</span></label>
+              <input type="number" id="calcArea" name="area" value="20" min="5" max="80" step="1" inputmode="numeric">
+            </div>
+            <div class="calc-field">
+              <label for="calcHeight">Výška stropu <span class="hint">m</span></label>
+              <input type="number" id="calcHeight" name="height" value="2.6" min="2" max="4" step="0.1" inputmode="decimal">
+            </div>
+            <div class="calc-field">
+              <label for="calcSun">Kam míří okna</label>
+              <select id="calcSun" name="sun">
+                <option value="1">Sever — slunce sem skoro nechodí</option>
+                <option value="1.15" selected>Východ nebo západ</option>
+                <option value="1.3">Jih — celé odpoledne na slunci</option>
+              </select>
+            </div>
+            <div class="calc-field">
+              <label for="calcPeople">Kolik lidí tam bývá</label>
+              <input type="number" id="calcPeople" name="people" value="2" min="0" max="10" step="1" inputmode="numeric">
+            </div>
+            <div class="calc-check">
+              <input type="checkbox" id="calcTop" name="top">
+              <label for="calcTop">Podkroví nebo poslední patro <span class="hint">rozpálená střecha přidá až třetinu zátěže</span></label>
+            </div>
+            <div class="calc-check">
+              <input type="checkbox" id="calcGlass" name="glass">
+              <label for="calcGlass">Velká prosklená plocha <span class="hint">balkonové dveře, střešní okno, okno přes celou stěnu</span></label>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+
+      <div class="calc-out">
+        <div id="calcResult" aria-live="polite">
+          <p class="calc-verdict" id="calcVerdict">Spočítejte si to</p>
+          <p class="calc-note" id="calcNote">Vyplňte rozměry místnosti vlevo.</p>
+          <dl class="calc-rows">
+            <div class="calc-row"><dt>Potřebný chladicí výkon</dt><dd id="calcPower">—</dd></div>
+            <div class="calc-row"><dt>Vychlazení o 7 °C</dt><dd id="calcTime">—</dd></div>
+            <div class="calc-row"><dt>Provoz za noc (8 h)</dt><dd id="calcCost">—</dd></div>
+          </dl>
+        </div>
+        <a class="btn" href="#objednat" id="calcCta">Objednat za 6&nbsp;990&nbsp;Kč</a>
+        <p class="calc-disclaimer">Orientační propočet podle plochy, výšky stropu, orientace oken a tepelné zátěže od lidí. SEVERKA 12 má chladicí výkon 3,5 kW (12 000 BTU) a příkon 1,0 kW, počítáme s cenou elektřiny 3 Kč/kWh. Skutečnost ovlivní zateplení, stínění i venkovní teplota.</p>
+
+        <form class="calc-lead-form" id="leadForm" hidden>
+          <p>Chcete výpočet i s doporučeným nastavením poslat na e-mail?</p>
+          <div class="row">
+            <label class="sr-only" for="leadEmail">Váš e-mail</label>
+            <input type="email" id="leadEmail" name="email" placeholder="vas@email.cz" required autocomplete="email">
+            <button class="btn small" type="submit">Poslat výpočet</button>
+          </div>
+          <label class="calc-consent">
+            <input type="checkbox" id="leadConsent" name="consent" required>
+            <span>Souhlasím se zpracováním e-mailu za účelem zaslání výpočtu a tipů k chlazení. Souhlas můžu kdykoli odvolat, podrobnosti v <a href="#">ochraně osobních údajů</a>.</span>
+          </label>
+          <p class="calc-status" id="leadStatus" role="status"></p>
+        </form>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -697,6 +817,127 @@ footer a{color:#2F4C5E}
     });
     v.addEventListener('playing', function(){ v.classList.add('playing'); });
     heroFig.appendChild(v);
+  }
+
+  /* ---------- kalkulačka vychlazení ----------
+     Model tepelné zátěže: základ 80 W/m² pro běžně zateplenou místnost se stropem
+     2,6 m, přepočtený na skutečnou výšku, násobený orientací oken, střechou nad
+     hlavou a velikostí prosklení; k tomu 100 W na osobu. Doba vychlazení vychází
+     z energie potřebné na ochlazení vzduchu (V × 1,2 kg/m³ × 1005 J/kg·K × ΔT)
+     vynásobené třemi za nábytek a stěny, dělené zbylým výkonem po pokrytí zátěže.
+     Čísla jsou orientační a stránka to u výsledku říká. */
+  var CAPACITY = 3500;   // chladicí výkon SEVERKY 12 ve W (12 000 BTU)
+  var INPUT_KW = 1.0;    // příkon
+  var PRICE_KWH = 3;     // Kč/kWh, stejná sazba jako ve FAQ
+  var LEAD_ENDPOINT = '';  /* fáze 2: URL pro sběr e-mailů (Ecomail / vlastní API).
+                              Dokud je prázdný, formulář se nezobrazí — ať se
+                              nikde neobjeví pole, které nic neodešle. */
+
+  var calcForm = document.getElementById('calcForm');
+  if (calcForm){
+    var out = {
+      verdict: document.getElementById('calcVerdict'),
+      note: document.getElementById('calcNote'),
+      power: document.getElementById('calcPower'),
+      time: document.getElementById('calcTime'),
+      cost: document.getElementById('calcCost')
+    };
+    var num = function(id, min, max, fallback){
+      var v = parseFloat(document.getElementById(id).value.replace(',', '.'));
+      if (isNaN(v)) return fallback;
+      return Math.min(Math.max(v, min), max);
+    };
+    var czk = function(n){ return n.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); };
+
+    function recalc(){
+      var area = num('calcArea', 5, 80, 20);
+      var height = num('calcHeight', 2, 4, 2.6);
+      var sun = parseFloat(document.getElementById('calcSun').value);
+      var people = num('calcPeople', 0, 10, 2);
+      var top = document.getElementById('calcTop').checked ? 1.35 : 1;
+      var glass = document.getElementById('calcGlass').checked ? 1.15 : 1;
+
+      var load = area * 80 * (height / 2.6) * sun * top * glass + people * 100;
+      var ratio = load / CAPACITY;
+      var volume = area * height;
+
+      out.power.textContent = (load / 1000).toFixed(1).replace('.', ',') + ' kW';
+
+      if (load >= CAPACITY){
+        out.time.textContent = 'nedosáhne';
+      } else {
+        var energy = volume * 1.2 * 1005 * 7 * 3;          // J na ochlazení o 7 °C
+        var minutes = Math.round(energy / (CAPACITY - load) / 60);
+        out.time.textContent = minutes > 90 ? 'přes 1,5 hodiny' : minutes + ' minut';
+      }
+
+      var duty = Math.min(ratio, 1);                        // kompresor po vychlazení cykluje
+      out.cost.textContent = czk(8 * INPUT_KW * duty * PRICE_KWH) + ' Kč';
+
+      var v = out.verdict, n = out.note;
+      v.classList.toggle('warn', ratio > 1);
+      /* Pásma jsou posunutá dolů schválně: čím blíž je zátěž výkonu jednotky,
+         tím pomaleji chlazení postupuje — u poměru kolem 0,95 už jde o hodiny. */
+      if (ratio <= 0.7){
+        v.textContent = 'Vychladí s rezervou.';
+        n.textContent = 'SEVERKA 12 má na tuhle místnost výkon nazbyt — vychladí ji rychle a kompresor pak bude jen udržovat teplotu.';
+      } else if (ratio <= 0.9){
+        v.textContent = 'Vychladí, akorát na míru.';
+        n.textContent = 'Výkon na vaši místnost sedí. Vychlazení chvíli potrvá, takže jednotku pusťte ještě před spaním a zatáhněte stínění.';
+      } else if (ratio <= 1.1){
+        v.textContent = 'Bude to na hraně.';
+        n.textContent = 'Místnost je na 12 000 BTU velká. Vychladíte ji jen se zataženým stíněním a zavřenými dveřmi, a bude to trvat. Zvažte, jestli nestačí chladit samotnou ložnici.';
+      } else {
+        v.textContent = 'Na tuhle místnost nestačí.';
+        n.textContent = 'Tepelná zátěž je vyšší než výkon jednotky — SEVERKA by jela naplno a teplotu jen držela. Dává smysl chladit menší místnost, nebo sáhnout po splitu.';
+      }
+
+      /* nemá smysl tlačit do objednávky někoho, komu jsme právě řekli, že to nestačí */
+      var cta = document.getElementById('calcCta');
+      if (ratio > 1.1){
+        cta.href = '#srovnani';
+        cta.textContent = 'Porovnat se split klimatizací';
+      } else {
+        cta.href = '#objednat';
+        cta.innerHTML = 'Objednat za 6&nbsp;990&nbsp;Kč';
+      }
+    }
+
+    calcForm.addEventListener('input', recalc);
+    calcForm.addEventListener('change', recalc);
+    recalc();
+
+    /* sběr e-mailů — jen když je nastavený endpoint */
+    var leadForm = document.getElementById('leadForm');
+    if (LEAD_ENDPOINT){
+      leadForm.hidden = false;
+      leadForm.addEventListener('submit', function(e){
+        e.preventDefault();
+        var status = document.getElementById('leadStatus');
+        status.textContent = 'Odesíláme…';
+        fetch(LEAD_ENDPOINT, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            email: document.getElementById('leadEmail').value,
+            vypocet: {
+              plocha: num('calcArea', 5, 80, 20),
+              vyska: num('calcHeight', 2, 4, 2.6),
+              osoby: num('calcPeople', 0, 10, 2),
+              podkrovi: document.getElementById('calcTop').checked,
+              prosklenie: document.getElementById('calcGlass').checked,
+              vykon: out.power.textContent,
+              vychlazeni: out.time.textContent
+            }
+          })
+        }).then(function(r){
+          status.textContent = r.ok ? 'Hotovo, výpočet máte v e-mailu.' : 'Odeslání se nepovedlo, zkuste to prosím znovu.';
+          if (r.ok) leadForm.reset();
+        }).catch(function(){
+          status.textContent = 'Odeslání se nepovedlo, zkuste to prosím znovu.';
+        });
+      });
+    }
   }
 
   /* CTA — fáze 1 prototyp, fáze 2 = Stripe Checkout / GoPay */
