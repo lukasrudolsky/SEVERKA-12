@@ -93,6 +93,34 @@ Ecomailu nebo vlastního API). Dokud je prázdná, formulář zůstane skrytý, 
 nikde neobjeví pole, které nic neodešle. Odesílá se `POST` s JSON `{email,
 vypocet}`. Před spuštěním doplň odkaz na reálné znění zpracování osobních údajů.
 
+## Časově omezená nabídka
+
+Lišta pod hlavičkou. Postavená tak, aby nebyla falešná urgence, kterou zadání
+zakazuje a kterou trestá zákon:
+
+- **termín je pevný a stejný pro každého** — žádný odpočet, který se po
+  obnovení stránky natáhne znovu;
+- **odpočet běží po minutách, ne po vteřinách**; tikající vteřiny jsou nátlak,
+  ne informace;
+- **§ 12a zákona č. 634/1992 Sb.** vyžaduje u každé slevy uvést nejnižší cenu
+  za posledních 30 dní — je přímo v liště i pod finálním CTA;
+- termín se zobrazuje **v českém čase** bez ohledu na zónu prohlížeče, ať ho
+  každý vidí tak, jak je vyhlášený.
+
+Ceny a termín jsou napevno v HTML (lišta, obě CTA, mobilní lišta, JSON-LD),
+takže nabídku vidí i návštěvník bez JS a stránka se při načtení nikam
+neposune — CLS zůstává na nule. JS jen dopočítává zbývající čas a po termínu
+nabídku schová a všude vrátí běžnou cenu.
+
+**Změna nabídky se dělá na dvou místech:** v bloku `<aside class="offer">`
+(a v cenách v CTA, mobilní liště a JSON-LD) a v konfiguraci `OFFER` ve skriptu
+dole. Po skončení akce blok z HTML smaž — automatické schování přes JS je
+záchranná brzda, ne trvalý stav.
+
+> Podle [plánu slev](docs/plan-slev.md) tahle nabídka **nemá běžet ve špičce
+> vedra** (červenec–srpen), kdy je poptávka nepružná a sleva jen zlevňuje
+> objednávky, které by přišly tak jako tak. Vypíná se přes `active: false`.
+
 ## Spuštění a nasazení
 
 Stránka nepotřebuje server ani build — stačí otevřít `index.html` v prohlížeči.
@@ -135,6 +163,13 @@ mobilu, 616 kB na desktopu včetně hero videa. axe-core: **0 porušení** na
 - Ze stejného důvodu je zlatá u hvězdiček ztmavena na `--star` (#A15C00) a čísla v tmavé
   sekci „Problém“ používají světlejší odstín `--heat` (#F5804F, 5,4 : 1 na tmavém pozadí).
   `--heat` se dál používá jen pro „horko/problém“ momenty.
+- **Sekce Parametry** je nad rámec zadání. Uvádí jen údaje, které už na stránce
+  zaznívají (výkon, plocha, příkon, hlučnost, těsnicí sada, certifikace, záruka)
+  — nic jsem nedomýšlel. Doplnit od dodavatele: rozměry, hmotnost, chladivo,
+  energetickou třídu a objem nádržky na kondenzát.
+- **Mobilní lišta s cenou a CTA** se ukáže pod hero a schová se nad finálním CTA,
+  ať ho nepřekrývá. Místo pro ni drží spodní odsazení natrvalo — přepínání
+  odsazení by hýbalo layoutem a zhoršovalo CLS.
 - **Menu v hlavičce** je nad rámec zadání (to počítalo jen s logem a CTA). Na desktopu
   je to pět kotev (Co získáte · Srovnání · Kalkulačka · Recenze · Časté dotazy) se zvýrazněním
   sekce, ve které se čtenář právě nachází, na mobilu panel pod hlavičkou. Zavírá se
@@ -171,6 +206,9 @@ Stránka se nesmí nasadit, dokud se nevybere jedna z variant:
 - [ ] Dodat originály fotek v plném rozlišení do `img-source/` a spustit `npm run images`
 - [ ] Vyřešit konflikt 1330 W / 1,0 kW (viz výše) — bez toho stránku nenasazovat
 - [ ] Ověřit reálný stav skladu v microcopy („Skladem 14 ks“)
+- [ ] Doplnit chybějící parametry od dodavatele (rozměry, hmotnost, chladivo, energetická třída)
+- [ ] Po skončení sezónní nabídky smazat blok `<aside class="offer">` a vrátit ceny na 6 990 Kč
+- [ ] Vést evidenci denní ceny kvůli § 12a (nejnižší cena za 30 dní)
 - [ ] Napojit `LEAD_ENDPOINT` u kalkulačky a doplnit odkaz na zpracování osobních údajů
 - [ ] Nechat model kalkulačky potvrdit někým, kdo zná reálné parametry jednotky
 

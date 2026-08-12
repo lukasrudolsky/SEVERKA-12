@@ -96,6 +96,43 @@ section[id],div[id]{scroll-margin-top:84px}
 .btn:hover{background:var(--deeper);transform:translateY(-1px)}
 .btn.small{padding:9px 20px;font-size:14px}
 
+/* ---------- časově omezená nabídka ----------
+   Vědomě potichu: žádná červená, žádné vteřiny, žádné blikání. Termín je
+   pevný a stejný pro všechny, po vypršení se nabídka sama schová. */
+.offer{background:#EAF3F9;border-bottom:1px solid var(--mist)}
+.offer .wrap{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 18px;padding-top:13px;padding-bottom:13px;font-size:15px}
+.offer .tag{font-weight:600;color:var(--deep)}
+.offer .deadline{color:var(--ink)}
+.offer .left{color:var(--muted-2);font-variant-numeric:tabular-nums}
+.offer .lowest{flex-basis:100%;font-size:13px;color:var(--muted-2)}
+.price-was{color:var(--muted-2);text-decoration:line-through;font-weight:400}
+
+/* ---------- parametry ---------- */
+.spec-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:28px;margin-top:34px;align-items:start}
+.spec-list{background:var(--surface);border:1px solid var(--mist);border-radius:var(--radius);overflow:hidden}
+.spec-list div{display:flex;justify-content:space-between;gap:18px;padding:14px 22px;border-bottom:1px solid var(--mist);font-size:15px}
+.spec-list div:last-child{border-bottom:0}
+.spec-list dt{color:var(--muted)}
+.spec-list dd{font-weight:600;text-align:right}
+.box{background:var(--surface);border:1px solid var(--mist);border-radius:var(--radius);padding:26px}
+.box h3{font-size:17px;margin-bottom:14px}
+.box ul{list-style:none;font-size:15px;color:var(--muted)}
+.box li{padding:9px 0 9px 26px;position:relative;border-bottom:1px solid var(--mist)}
+.box li:last-child{border-bottom:0}
+.box li::before{content:"";position:absolute;left:2px;top:16px;width:11px;height:6px;border-left:2px solid var(--glacier);
+  border-bottom:2px solid var(--glacier);transform:rotate(-45deg)}
+
+/* ---------- mobilní lišta s CTA ---------- */
+.mobile-cta{display:none;position:fixed;left:0;right:0;bottom:0;z-index:60;background:rgba(255,255,255,.96);
+  backdrop-filter:blur(10px);border-top:1px solid var(--mist);box-shadow:0 -6px 22px rgba(12,34,51,.08);
+  padding:10px 16px calc(10px + env(safe-area-inset-bottom));
+  transform:translateY(110%);transition:transform .25s ease}
+.mobile-cta.up{transform:none}
+.mobile-cta .row{display:flex;align-items:center;gap:14px;max-width:520px;margin:0 auto}
+.mobile-cta .price{font-family:var(--display);font-weight:800;font-size:19px;line-height:1.15;flex:none}
+.mobile-cta .price small{display:block;font-family:var(--body);font-weight:400;font-size:12px;color:var(--muted-2);letter-spacing:0}
+.mobile-cta .btn{flex:1;padding:12px 18px}
+
 /* ---------- hero ---------- */
 .hero{position:relative;overflow:hidden;padding:64px 0 80px;
   background:linear-gradient(135deg,#FBEFE6 0%,var(--bg) 45%,#E3F1FA 100%);
@@ -273,6 +310,9 @@ footer a{color:#2F4C5E}
   .nav-menu a[aria-current="location"]{border-bottom:0}
   .js .calc{grid-template-columns:1fr}
   .calc-out{position:static}
+  .spec-grid{grid-template-columns:1fr;gap:18px}
+  .js .mobile-cta{display:block}
+  .js body{padding-bottom:76px}   /* místo pro lištu drž pořád, přepínání by hýbalo layoutem */
   .hero .wrap{grid-template-columns:1fr;gap:36px}
   .pain-grid,.bene-grid,.honest-grid,.rev-grid{grid-template-columns:1fr}
   .section{padding:56px 0}
@@ -317,6 +357,21 @@ footer a{color:#2F4C5E}
   </div>
 </header>
 
+<!-- ČASOVĚ OMEZENÁ NABÍDKA
+     Texty i ceny jsou napevno v HTML, aby se stránka nikam neposunula a viděl
+     je i návštěvník bez JS. JS jen dopočítává zbývající čas a po termínu
+     nabídku schová. Při změně nabídky uprav OBĚ místa: tenhle blok (včetně cen
+     v CTA, v mobilní liště a v JSON-LD) a konfiguraci OFFER ve skriptu dole.
+     Po skončení akce blok z HTML smaž. -->
+<aside class="offer" id="offer" aria-label="Aktuální nabídka">
+  <div class="wrap">
+    <span class="tag">Sezónní nabídka 6&nbsp;490&nbsp;Kč</span>
+    <span class="deadline" id="offerDeadline">do pondělí 31. srpna 23:59</span>
+    <span class="left" id="offerLeft">· zbývá&nbsp;…</span>
+    <span class="lowest">Nejnižší cena za posledních 30 dní: 6 990 Kč. Po skončení nabídky se vrací.</span>
+  </div>
+</aside>
+
 <main id="top">
 
 <!-- 2. HERO -->
@@ -326,7 +381,7 @@ footer a{color:#2F4C5E}
       <span class="eyebrow">Mobilní klimatizace · 12 000 BTU</span>
       <h1 id="hero-h">Konečně se v&nbsp;létě vyspíte.</h1>
       <p class="lead">Klimatizaci SEVERKA&nbsp;12 zapojíte do zásuvky — a&nbsp;za <strong>20&nbsp;minut</strong> máte v&nbsp;ložnici <strong>o&nbsp;7&nbsp;°C méně</strong>. Bez montáže, bez vrtání, bez čekání na montážní firmu.</p>
-      <a class="btn" href="#objednat">Objednat za 6&nbsp;990&nbsp;Kč</a>
+      <a class="btn" href="#objednat" data-price-cta>Objednat za 6&nbsp;490&nbsp;Kč</a>
       <div class="micro">
         <span>Skladem 14 ks</span>
         <span>Doručení do 48 hodin</span>
@@ -570,6 +625,34 @@ footer a{color:#2F4C5E}
   </div>
 </section>
 
+<!-- PARAMETRY -->
+<section class="section flush" id="parametry" aria-labelledby="spec-h">
+  <div class="wrap">
+    <span class="eyebrow">Parametry</span>
+    <h2 id="spec-h">Co si vlastně pořizujete.</h2>
+    <div class="spec-grid">
+      <dl class="spec-list reveal">
+        <div><dt>Chladicí výkon</dt><dd>12 000 BTU (3,5 kW)</dd></div>
+        <div><dt>Doporučená plocha</dt><dd>do 35 m²</dd></div>
+        <div><dt>Příkon</dt><dd>1,0 kW</dd></div>
+        <div><dt>Hlučnost v režimu spánku</dt><dd>54 dB</dd></div>
+        <div><dt>Okenní těsnicí sada</dt><dd>okna do obvodu 400 cm,<br>i střešní</dd></div>
+        <div><dt>Certifikace</dt><dd>CE · EPREL</dd></div>
+        <div><dt>Záruka</dt><dd>2 roky, servis v ČR</dd></div>
+      </dl>
+      <div class="box reveal">
+        <h3>Co najdete v krabici</h3>
+        <ul>
+          <li>Jednotka na kolečkách</li>
+          <li>Hadice pro odvod teplého vzduchu</li>
+          <li>Okenní těsnicí sada se zipem</li>
+          <li>Návod v češtině</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- 8. RECENZE -->
 <section class="section" id="recenze" aria-labelledby="rev-h">
   <div class="wrap">
@@ -643,18 +726,27 @@ footer a{color:#2F4C5E}
         <h2 id="cta-h">Další vlna veder je otázkou dnů.</h2>
         <p>Objednejte dnes a&nbsp;SEVERKA 12 chladí vaši ložnici do 48&nbsp;hodin — včetně okenní těsnicí sady zdarma.</p>
         <!-- fáze 2: nahradit odkazem do pokladny (Stripe Checkout / GoPay) -->
-        <button class="btn" type="button" id="order">Objednat za 6&nbsp;990&nbsp;Kč</button>
+        <button class="btn" type="button" id="order" data-price-cta>Objednat za 6&nbsp;490&nbsp;Kč</button>
         <div class="micro">
           <span>Skladem 14 ks</span>
           <span>Doprava zdarma</span>
           <span>Platba kartou i&nbsp;na dobírku</span>
         </div>
+        <p class="calc-disclaimer" id="finalLowest">Nejnižší cena za posledních 30 dní: 6 990 Kč.</p>
       </div>
     </div>
   </div>
 </section>
 
 </main>
+
+<!-- mobilní lišta: objevuje se pod hero a mizí nad finálním CTA, ať ho nepřekrývá -->
+<div class="mobile-cta" id="mobileCta" aria-hidden="true">
+  <div class="row">
+    <span class="price" data-price-plain>6 490 Kč<small>místo 6 990 Kč</small></span>
+    <a class="btn" href="#objednat" tabindex="-1">Objednat</a>
+  </div>
+</div>
 
 <footer>
   <div class="wrap cols">
@@ -685,11 +777,11 @@ footer a{color:#2F4C5E}
   "offers": {
     "@type": "Offer",
     "url": "https://severka.cz/#objednat",
-    "price": "6990",
+    "price": "6490",
     "priceCurrency": "CZK",
     "availability": "https://schema.org/InStock",
     "itemCondition": "https://schema.org/NewCondition",
-    "priceValidUntil": "2026-12-31",
+    "priceValidUntil": "2026-08-31",
     "shippingDetails": {
       "@type": "OfferShippingDetails",
       "shippingRate": { "@type": "MonetaryAmount", "value": "0", "currency": "CZK" },
@@ -716,6 +808,113 @@ footer a{color:#2F4C5E}
   window.addEventListener('scroll', function(){
     hdr.classList.toggle('scrolled', window.scrollY > 8);
   }, {passive:true});
+
+  /* ---------- časově omezená nabídka ----------
+     Jedno místo, kde se nabídka zapíná a nastavuje. Pravidla, která platí:
+     • `ends` je pevný okamžik, stejný pro každého návštěvníka — žádný odpočet,
+       který se po obnovení stránky natáhne znovu.
+     • Po vypršení se nabídka sama schová a všude zůstane běžná cena, která je
+       v HTML jako výchozí. Bez JS ji uvidí návštěvník taky.
+     • `lowest30` musí být nejnižší cena za posledních 30 dní — § 12a zákona
+       o ochraně spotřebitele ji u každé slevy vyžaduje uvést.
+     • Ceny a termín jsou i v HTML (lišta, CTA, mobilní lišta, JSON-LD) — při
+       změně nabídky uprav obě místa. Díky tomu nabídku vidí i návštěvník bez
+       JS a stránka se při načtení nikam neposune.
+     Podle plánu slev (docs/plan-slev.md) tahle nabídka nemá běžet ve špičce
+     vedra; mimo své okno se vypíná nastavením active: false. */
+  var OFFER = {
+    active: true,
+    ends: '2026-08-31T23:59:59+02:00',
+    price: 6490,
+    regular: 6990,
+    lowest30: 6990,
+    tag: 'Sezónní nabídka'
+  };
+
+  var czkFmt = function(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' Kč'; };
+
+  function initOffer(){
+    var bar = document.getElementById('offer');
+    if (!bar) return;
+    var end = new Date(OFFER.ends);
+
+    function expire(){                       /* žádný reload pod rukama návštěvníka */
+      bar.hidden = true;
+      document.querySelectorAll('[data-price-cta]').forEach(function(el){
+        el.innerHTML = 'Objednat za ' + czkFmt(OFFER.regular);
+      });
+      var plain = document.querySelector('[data-price-plain]');
+      if (plain) plain.innerHTML = czkFmt(OFFER.regular) + ' <small>doprava zdarma</small>';
+      var fin = document.getElementById('finalLowest');
+      if (fin) fin.hidden = true;
+      var ld = document.querySelector('script[type="application/ld+json"]');
+      if (ld){
+        try {
+          var d = JSON.parse(ld.textContent);
+          d.offers.price = String(OFFER.regular);
+          delete d.offers.priceValidUntil;
+          ld.textContent = JSON.stringify(d);
+        } catch (e){ /* raději nechat původní než rozbít */ }
+      }
+    }
+
+    if (!OFFER.active || isNaN(end) || end <= new Date()){ expire(); return; }
+
+    /* Termín hlásíme v českém čase, ať ho každý vidí tak, jak je vyhlášený —
+       ne posunutý podle zóny prohlížeče. Dny a měsíce ve 2. pádu („do soboty
+       31. srpna“), což Intl sám nedá. */
+    var toGen = {'pondělí':'pondělí','úterý':'úterý','středa':'středy','čtvrtek':'čtvrtka',
+                 'pátek':'pátku','sobota':'soboty','neděle':'neděle'};
+    var months = ['ledna','února','března','dubna','května','června','července',
+                  'srpna','září','října','listopadu','prosince'];
+    try {
+      var parts = {};
+      new Intl.DateTimeFormat('cs-CZ', {timeZone:'Europe/Prague', weekday:'long', day:'numeric',
+        month:'numeric', hour:'2-digit', minute:'2-digit', hour12:false})
+        .formatToParts(end).forEach(function(x){ parts[x.type] = x.value; });
+      if (parts.weekday){
+        document.getElementById('offerDeadline').textContent = 'do ' +
+          (toGen[parts.weekday.toLowerCase()] || parts.weekday) + ' ' + parseInt(parts.day, 10) +
+          '. ' + months[parseInt(parts.month, 10) - 1] + ' ' + parts.hour + ':' + parts.minute;
+      }
+    } catch (e){ /* termín zůstane tak, jak je v HTML */ }
+
+    /* zbývající čas: po minutách, ne po vteřinách — vteřiny jsou nátlak, ne informace */
+    var left = document.getElementById('offerLeft');
+    var timer;
+    function plural(n, one, few, many){ return n === 1 ? one : (n < 5 ? few : many); }
+    function tick(){
+      var ms = end - new Date();
+      if (ms <= 0){ clearInterval(timer); expire(); return; }
+      var mins = Math.floor(ms / 60000), hours = Math.floor(mins / 60), days = Math.floor(hours / 24);
+      if (days >= 1) left.textContent = '· zbývá ' + days + ' ' + plural(days,'den','dny','dní') +
+        ' ' + (hours % 24) + ' ' + plural(hours % 24,'hodina','hodiny','hodin');
+      else if (hours >= 1) left.textContent = '· zbývá ' + hours + ' ' + plural(hours,'hodina','hodiny','hodin') +
+        ' ' + (mins % 60) + ' min';
+      else left.textContent = '· zbývá ' + mins + ' min';
+    }
+    tick();
+    timer = setInterval(tick, 30000);
+  }
+  initOffer();
+
+  /* mobilní lišta s cenou a CTA */
+  var mcta = document.getElementById('mobileCta');
+  var finalBlock = document.getElementById('objednat');
+  if (mcta && 'IntersectionObserver' in window){
+    var pastHero = false, atFinal = false;
+    var sync = function(){
+      var show = pastHero && !atFinal && window.matchMedia('(max-width:860px)').matches;
+      mcta.classList.toggle('up', show);
+      mcta.setAttribute('aria-hidden', String(!show));
+      mcta.querySelector('a').tabIndex = show ? 0 : -1;
+    };
+    new IntersectionObserver(function(e){ pastHero = !e[0].isIntersecting; sync(); }, {threshold:0})
+      .observe(document.getElementById('hero'));
+    new IntersectionObserver(function(e){ atFinal = e[0].isIntersecting; sync(); }, {threshold:0})
+      .observe(finalBlock);
+    window.addEventListener('resize', sync, {passive:true});
+  }
 
   /* menu: na mobilu panel pod hlavičkou */
   var toggle = document.getElementById('navToggle');
