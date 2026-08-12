@@ -16,12 +16,12 @@
 <meta property="og:url" content="https://severka.cz/">
 <meta property="og:title" content="Mobilní klimatizace SEVERKA 12 — ochlaďte ložnici o 7 °C bez montáže">
 <meta property="og:description" content="Zapojíte do zásuvky a za 20 minut je v ložnici o 7 °C méně. Bez montáže, provoz od 3 Kč/hod. Skladem, doručení do 48 hodin.">
-<!-- TODO(fáze 1): nahradit reálnou fotkou 1200×630 px, absolutní URL -->
-<meta property="og:image" content="https://severka.cz/og-severka-12.jpg">
+<meta property="og:image" content="https://severka.cz/img/packshot-og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Mobilní klimatizace SEVERKA 12 v ložnici">
+<meta property="og:image:alt" content="Mobilní klimatizace SEVERKA 12 — bílá jednotka na kolečkách s hadicí pro odvod teplého vzduchu">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://severka.cz/img/packshot-og.jpg">
 
 <!-- Fonty: preconnect + non-blocking load, fallback na system-ui -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -93,10 +93,27 @@ header.scrolled{border-bottom:1px solid var(--mist);box-shadow:0 4px 18px rgba(1
 .micro{margin-top:14px;font-size:14px;color:var(--muted-2);display:flex;flex-wrap:wrap;gap:6px 18px}
 .micro span::before{content:"✓";color:var(--deep);font-weight:700;margin-right:6px}
 .hero-visual{position:relative}
-.thermo{position:absolute;top:0;left:0;background:var(--surface);border:1px solid var(--mist);border-radius:16px;padding:14px 20px;box-shadow:0 14px 34px rgba(12,34,51,.12);text-align:center;min-width:150px}
+.thermo{position:absolute;top:-14px;right:-12px;z-index:2;background:var(--surface);border:1px solid var(--mist);border-radius:16px;padding:14px 20px;box-shadow:0 14px 34px rgba(12,34,51,.12);text-align:center;min-width:150px}
 .thermo .val{font-family:var(--display);font-weight:800;font-size:38px;font-variant-numeric:tabular-nums;color:var(--deep);transition:color 1.2s;line-height:1.1}
 .thermo.hot .val{color:var(--heat)}
 .thermo .lbl{font-size:12px;color:var(--muted-2);letter-spacing:.06em;text-transform:uppercase;margin-top:2px}
+
+/* ---------- fotky ----------
+   Rozměry drží poměr stran přes aspect-ratio, obrázek se do rámu ořezává
+   (object-fit), takže se layout nikdy nepřepočítá — CLS zůstává na nule. */
+.shot{position:relative;overflow:hidden;border-radius:var(--radius);background:var(--mist);line-height:0}
+.shot img{width:100%;height:100%;object-fit:cover}
+.shot--hero{aspect-ratio:3/2;border-radius:20px;box-shadow:0 14px 34px rgba(12,34,51,.12)}
+.shot--wide{aspect-ratio:16/9;margin-top:32px}
+.shot--split{aspect-ratio:2/1;margin-top:32px}
+.shot--card{aspect-ratio:16/10;border-radius:10px;margin-bottom:16px}
+.shot--packshot{aspect-ratio:1/1;border-radius:18px}
+.shot-cap{margin-top:14px;font-size:14px;color:#5B7486;text-align:center;line-height:1.5}
+.pain .shot{border:1px solid rgba(255,255,255,.12)}
+.pain .shot-cap{color:#C7D9E4}
+/* karta 2 nemá fotku — stejný rám drží grid „Na rovinu“ vyrovnaný */
+.shot--icon{display:grid;place-items:center;background:#EAF3F9}
+.shot--icon svg{width:44px;height:44px;margin:0}
 
 /* ---------- trust bar ---------- */
 .trust{background:var(--ink);color:#DCEBF4;padding:18px 0}
@@ -156,12 +173,14 @@ details[open] summary::after{transform:rotate(45deg)}
 details .a{padding:0 22px 20px;font-size:15px;color:var(--muted)}
 
 /* ---------- final CTA ---------- */
-.final{background:linear-gradient(135deg,var(--deeper),var(--deep));color:#fff;text-align:center;border-radius:22px;padding:56px 32px;margin:0 20px}
+.final{background:linear-gradient(135deg,var(--deeper),var(--deep));color:#fff;border-radius:22px;padding:48px;margin:0 20px;
+  display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:40px;align-items:center}
 .final h2{color:#fff;margin-bottom:12px}
-.final p{color:#DCEEFA;max-width:52ch;margin:0 auto 28px}
+.final p{color:#DCEEFA;max-width:46ch;margin:0 0 28px}
+.final .shot--packshot{background:rgba(255,255,255,.1)}
 .final .btn{background:#fff;color:var(--deep)}
 .final .btn:hover{background:#EAF3F9}
-.final .micro{justify-content:center;color:#DCEEFA}
+.final .micro{color:#DCEEFA}
 .final .micro span::before{color:#fff}
 
 /* ---------- footer ---------- */
@@ -183,6 +202,12 @@ footer a{color:#2F4C5E}
   .pain-grid,.bene-grid,.honest-grid,.rev-grid{grid-template-columns:1fr}
   .section{padding:56px 0}
   .thermo{position:static;margin:18px auto 0;width:max-content}
+  .shot--hero{aspect-ratio:4/5}          /* art direction: na mobilu ořez na výšku */
+  .shot--split{aspect-ratio:3/2}
+  .final{grid-template-columns:1fr;gap:0;padding:44px 26px;text-align:center}
+  .final p{margin-inline:auto}
+  .final .micro{justify-content:center}
+  .final .shot--packshot{display:none}   /* na mobilu fotku skrýváme (zůstává v og:image) */
 }
 @media (max-width:420px){
   .wrap{padding:0 16px}
@@ -222,52 +247,19 @@ footer a{color:#2F4C5E}
       </div>
     </div>
     <div class="hero-visual">
-      <!--
-        FOTO SLOT (hero) — až budou reálné fotky, nahraď <svg> níže tímto blokem:
+      <!-- LCP prvek: bez lazy-load, fetchpriority=high. Na mobilu ořez 4:5 (art direction). -->
+      <figure class="shot shot--hero">
         <picture>
-          <source type="image/avif" srcset="/img/hero-loznice-520.avif 520w, /img/hero-loznice-1040.avif 1040w" sizes="(max-width:860px) 92vw, 480px">
-          <source type="image/webp" srcset="/img/hero-loznice-520.webp 520w, /img/hero-loznice-1040.webp 1040w" sizes="(max-width:860px) 92vw, 480px">
-          <img src="/img/hero-loznice-520.jpg" width="520" height="420" alt="Mobilní klimatizace SEVERKA 12 v ložnici, hadice vyvedená do okna s těsnicí sadou" fetchpriority="high" decoding="async">
+          <source media="(max-width:860px)" type="image/avif" srcset="img/hero-loznice-4x5-800.avif 800w, img/hero-loznice-4x5-1200.avif 1200w" sizes="92vw">
+          <source media="(max-width:860px)" type="image/webp" srcset="img/hero-loznice-4x5-800.webp 800w, img/hero-loznice-4x5-1200.webp 1200w" sizes="92vw">
+          <source media="(max-width:860px)" srcset="img/hero-loznice-4x5-800.jpg 800w, img/hero-loznice-4x5-1200.jpg 1200w" sizes="92vw">
+          <source type="image/avif" srcset="img/hero-loznice-800.avif 800w, img/hero-loznice-1200.avif 1200w, img/hero-loznice-1600.avif 1600w" sizes="480px">
+          <source type="image/webp" srcset="img/hero-loznice-800.webp 800w, img/hero-loznice-1200.webp 1200w, img/hero-loznice-1600.webp 1600w" sizes="480px">
+          <img src="img/hero-loznice-1200.jpg" srcset="img/hero-loznice-800.jpg 800w, img/hero-loznice-1200.jpg 1200w, img/hero-loznice-1600.jpg 1600w" sizes="480px"
+               width="1200" height="800" fetchpriority="high" decoding="async"
+               alt="Mobilní klimatizace SEVERKA 12 v noční ložnici, hadice vyvedená oknem s těsnicí sadou, displej ukazuje 23 °C">
         </picture>
-        (hero fotku NEdávat lazy — je to LCP prvek)
-      -->
-      <svg viewBox="0 0 520 420" width="520" height="420" role="img" aria-label="Ilustrace mobilní klimatizace SEVERKA 12 s hadicí vyvedenou do okna s těsnicí sadou">
-        <!-- okno -->
-        <rect x="300" y="30" width="180" height="240" rx="10" fill="#FFFFFF" stroke="#DCEBF4" stroke-width="3"/>
-        <rect x="316" y="46" width="148" height="150" rx="6" fill="#CFE7F6"/>
-        <rect x="316" y="46" width="148" height="150" rx="6" fill="url(#sky)" opacity=".85"/>
-        <circle cx="352" cy="82" r="16" fill="#F6C453"/>
-        <!-- hadice (končí v těsnicím panelu okna) -->
-        <path d="M240 160 C 300 152, 330 196, 366 214" fill="none" stroke="#9FBFD3" stroke-width="20" stroke-linecap="round"/>
-        <path d="M240 160 C 300 152, 330 196, 366 214" fill="none" stroke="#C6DCEA" stroke-width="20" stroke-linecap="round" stroke-dasharray="10 12"/>
-        <!-- těsnicí panel + štítek (kreslíme nad hadicí) -->
-        <rect x="316" y="202" width="148" height="28" rx="6" fill="#EAF3F9"/>
-        <rect x="316" y="238" width="148" height="20" rx="6" fill="#C74E1E"/>
-        <text x="390" y="252.5" font-family="Inter,system-ui" font-size="11" font-weight="600" fill="#fff" text-anchor="middle">těsnicí sada v ceně</text>
-        <!-- jednotka -->
-        <rect x="120" y="120" width="130" height="240" rx="20" fill="#FFFFFF" stroke="#DCEBF4" stroke-width="3"/>
-        <rect x="136" y="142" width="98" height="10" rx="5" fill="#DCEBF4"/>
-        <rect x="136" y="160" width="98" height="10" rx="5" fill="#DCEBF4"/>
-        <rect x="136" y="178" width="98" height="10" rx="5" fill="#DCEBF4"/>
-        <rect x="136" y="210" width="98" height="60" rx="10" fill="#0C2233"/>
-        <text x="185" y="248" font-family="Bricolage Grotesque,Inter,system-ui" font-size="24" font-weight="800" fill="#7FD1FF" text-anchor="middle">23,0°</text>
-        <circle cx="152" cy="300" r="7" fill="#1B7FC4"/>
-        <circle cx="176" cy="300" r="7" fill="#DCEBF4"/>
-        <circle cx="200" cy="300" r="7" fill="#DCEBF4"/>
-        <rect x="132" y="352" width="22" height="14" rx="7" fill="#9FBFD3"/>
-        <rect x="216" y="352" width="22" height="14" rx="7" fill="#9FBFD3"/>
-        <!-- chladný vzduch -->
-        <g stroke="#1B7FC4" stroke-width="3" stroke-linecap="round" opacity=".55" fill="none">
-          <path d="M96 170 q -18 10 -32 4"/>
-          <path d="M98 200 q -24 12 -44 4"/>
-          <path d="M96 230 q -18 10 -32 4"/>
-        </g>
-        <defs>
-          <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#FBD9A8"/><stop offset="1" stop-color="#BFE0F4"/>
-          </linearGradient>
-        </defs>
-      </svg>
+      </figure>
       <!-- teploměr: vizuál je dekorativní, pro čtečky je statická věta níže -->
       <div class="thermo" id="thermo" aria-hidden="true">
         <div class="val" id="thermoVal">23,0&nbsp;°C</div>
@@ -300,6 +292,18 @@ footer a{color:#2F4C5E}
       <div class="pain-card reveal"><div class="num">32&nbsp;°C</div><p>Home office v&nbsp;podkroví nebo malé kanceláři bez klimatizace. Soustředění klesá s&nbsp;každým stupněm navíc.</p></div>
       <div class="pain-card reveal"><div class="num">25–45&nbsp;tis.&nbsp;Kč</div><p>Cena splitové klimatizace s&nbsp;montáží. V&nbsp;nájmu ji navíc bez souhlasu majitele instalovat nesmíte.</p></div>
     </div>
+    <figure class="reveal">
+      <div class="shot shot--wide">
+        <picture>
+          <source type="image/avif" srcset="img/podkrovi-office-800.avif 800w, img/podkrovi-office-1200.avif 1200w, img/podkrovi-office-1600.avif 1600w" sizes="(max-width:1120px) 92vw, 1040px">
+          <source type="image/webp" srcset="img/podkrovi-office-800.webp 800w, img/podkrovi-office-1200.webp 1200w, img/podkrovi-office-1600.webp 1600w" sizes="(max-width:1120px) 92vw, 1040px">
+          <img src="img/podkrovi-office-1200.jpg" srcset="img/podkrovi-office-800.jpg 800w, img/podkrovi-office-1200.jpg 1200w, img/podkrovi-office-1600.jpg 1600w" sizes="(max-width:1120px) 92vw, 1040px"
+               width="1600" height="900" loading="lazy" decoding="async"
+               alt="Podkrovní pracovna s mobilní klimatizací SEVERKA 12 vedle pracovního stolu">
+        </picture>
+      </div>
+      <figcaption class="shot-cap">Podkroví ve špičce léta — přesně pro tyhle prostory je SEVERKA stavěná.</figcaption>
+    </figure>
   </div>
 </section>
 
@@ -313,6 +317,18 @@ footer a{color:#2F4C5E}
       <div class="bene reveal"><div class="num">3&nbsp;Kč</div><h3>za hodinu provozu</h3><p>Příkon 1,0&nbsp;kW. Celá tropická noc s&nbsp;klimatizací vás vyjde na cenu jedné kávy.</p></div>
       <div class="bene reveal"><div class="num">10&nbsp;min</div><h3>z krabice do zásuvky</h3><p>Žádné vrtání, žádná montážní firma, žádná revize. Kolečka, hadice i&nbsp;okenní těsnění jsou v&nbsp;balení.</p></div>
     </div>
+    <figure class="reveal">
+      <div class="shot shot--wide">
+        <picture>
+          <source type="image/avif" srcset="img/instalace-10min-800.avif 800w, img/instalace-10min-1200.avif 1200w, img/instalace-10min-1600.avif 1600w" sizes="(max-width:1120px) 92vw, 1040px">
+          <source type="image/webp" srcset="img/instalace-10min-800.webp 800w, img/instalace-10min-1200.webp 1200w, img/instalace-10min-1600.webp 1600w" sizes="(max-width:1120px) 92vw, 1040px">
+          <img src="img/instalace-10min-1200.jpg" srcset="img/instalace-10min-800.jpg 800w, img/instalace-10min-1200.jpg 1200w, img/instalace-10min-1600.jpg 1600w" sizes="(max-width:1120px) 92vw, 1040px"
+               width="1600" height="900" loading="lazy" decoding="async"
+               alt="Muž snadno přesouvá klimatizaci SEVERKA 12 na kolečkách, v pozadí rozbalená krabice">
+        </picture>
+      </div>
+      <figcaption class="shot-cap">Z krabice do zásuvky za 10 minut — kolečka, hadice i&nbsp;těsnění jsou v&nbsp;balení.</figcaption>
+    </figure>
   </div>
 </section>
 
@@ -321,6 +337,16 @@ footer a{color:#2F4C5E}
   <div class="wrap">
     <span class="eyebrow">Srovnání</span>
     <h2 id="cmp-h">Ventilátor fouká. Klimatizace chladí.</h2>
+    <!-- obrázek opakuje headline vizuálně, caption by byl duplicitní -->
+    <div class="shot shot--split reveal">
+      <picture>
+        <source type="image/avif" srcset="img/srovnani-split-800.avif 800w, img/srovnani-split-1200.avif 1200w, img/srovnani-split-1600.avif 1600w" sizes="(max-width:1120px) 92vw, 1040px">
+        <source type="image/webp" srcset="img/srovnani-split-800.webp 800w, img/srovnani-split-1200.webp 1200w, img/srovnani-split-1600.webp 1600w" sizes="(max-width:1120px) 92vw, 1040px">
+        <img src="img/srovnani-split-1200.jpg" srcset="img/srovnani-split-800.jpg 800w, img/srovnani-split-1200.jpg 1200w, img/srovnani-split-1600.jpg 1600w" sizes="(max-width:1120px) 92vw, 1040px"
+             width="1600" height="800" loading="lazy" decoding="async"
+             alt="Srovnání: ventilátor v horké místnosti vlevo, mobilní klimatizace v ochlazené místnosti vpravo">
+      </picture>
+    </div>
     <section class="table-scroll reveal" aria-label="Srovnání ventilátoru, SEVERKY 12 a split klimatizace" tabindex="0">
       <table>
         <caption class="sr-only">Srovnání pořizovací ceny, chlazení, instalace a vhodného použití: ventilátor, SEVERKA 12 a split klimatizace</caption>
@@ -345,25 +371,36 @@ footer a{color:#2F4C5E}
     <h2 id="honest-h">Tři věci, které vám jiní prodejci neřeknou.</h2>
     <div class="honest-grid">
       <div class="honest-card reveal">
-        <svg viewBox="0 0 40 40" width="40" height="40" fill="none" aria-hidden="true"><path d="M8 16v8h6l8 7V9l-8 7H8z" stroke="#1B7FC4" stroke-width="2.4" stroke-linejoin="round"/><path d="M28 15q4 5 0 10" stroke="#1B7FC4" stroke-width="2.4" stroke-linecap="round"/></svg>
+        <div class="shot shot--card">
+          <picture>
+            <source type="image/avif" srcset="img/panel-sleep-800.avif 800w, img/panel-sleep-1200.avif 1200w" sizes="(max-width:860px) 88vw, 300px">
+            <source type="image/webp" srcset="img/panel-sleep-800.webp 800w, img/panel-sleep-1200.webp 1200w" sizes="(max-width:860px) 88vw, 300px">
+            <img src="img/panel-sleep-800.jpg" srcset="img/panel-sleep-800.jpg 800w, img/panel-sleep-1200.jpg 1200w" sizes="(max-width:860px) 88vw, 300px"
+                 width="1200" height="750" loading="lazy" decoding="async"
+                 alt="Detail ovládacího panelu s tlačítkem nočního režimu Sleep Mode a displejem 23,0 °C">
+          </picture>
+        </div>
         <h3>Ano, je slyšet.</h3>
         <p>Žádná mobilní klimatizace není neslyšitelná — kdo tvrdí opak, lže. SEVERKA má v&nbsp;tichém režimu <b>54&nbsp;dB</b>, zhruba jako tišší rozhovor. Osvědčený postup: vychlaďte ložnici na plný výkon před spaním a&nbsp;na noc přepněte do režimu spánku.</p>
       </div>
       <div class="honest-card reveal">
-        <svg viewBox="0 0 40 40" width="40" height="40" fill="none" aria-hidden="true"><path d="M22 4L10 22h8l-2 14 14-20h-9z" stroke="#1B7FC4" stroke-width="2.4" stroke-linejoin="round"/></svg>
+        <!-- karta 2 fotku nemá; rám drží stejný poměr, aby grid seděl -->
+        <div class="shot shot--card shot--icon">
+          <svg viewBox="0 0 40 40" fill="none" aria-hidden="true"><path d="M22 4L10 22h8l-2 14 14-20h-9z" stroke="#1B7FC4" stroke-width="2.4" stroke-linejoin="round"/></svg>
+        </div>
         <h3>Spotřeba? Spočítaná.</h3>
         <p>Příkon 1,0&nbsp;kW znamená při běžné ceně elektřiny zhruba <b>3&nbsp;Kč za hodinu</b>. Osm hodin chlazení přes noc = cca 24&nbsp;Kč. Přesnou částku si ověříte podle sazby ve své smlouvě.</p>
       </div>
       <div class="honest-card reveal">
-        <!--
-          FOTO SLOT (těsnicí sada) — reálný detail nasazené sady v okně:
+        <div class="shot shot--card">
           <picture>
-            <source type="image/avif" srcset="/img/tesnici-sada-640.avif" >
-            <source type="image/webp" srcset="/img/tesnici-sada-640.webp">
-            <img src="/img/tesnici-sada-640.jpg" width="640" height="420" alt="Okenní těsnicí sada se zipem nasazená v pootevřeném okně" loading="lazy" decoding="async">
+            <source type="image/avif" srcset="img/tesnici-sada-800.avif 800w, img/tesnici-sada-1200.avif 1200w" sizes="(max-width:860px) 88vw, 300px">
+            <source type="image/webp" srcset="img/tesnici-sada-800.webp 800w, img/tesnici-sada-1200.webp 1200w" sizes="(max-width:860px) 88vw, 300px">
+            <img src="img/tesnici-sada-800.jpg" srcset="img/tesnici-sada-800.jpg 800w, img/tesnici-sada-1200.jpg 1200w" sizes="(max-width:860px) 88vw, 300px"
+                 width="1200" height="750" loading="lazy" decoding="async"
+                 alt="Okenní těsnicí sada se zipem nasazená na otevřeném okně, prostup hadice klimatizace">
           </picture>
-        -->
-        <svg viewBox="0 0 40 40" width="40" height="40" fill="none" aria-hidden="true"><rect x="7" y="6" width="26" height="28" rx="3" stroke="#1B7FC4" stroke-width="2.4"/><path d="M7 26h26M20 26v8" stroke="#1B7FC4" stroke-width="2.4"/><path d="M14 13h12" stroke="#E8622C" stroke-width="2.4" stroke-linecap="round"/></svg>
+        </div>
         <h3>Hadice do okna? Vyřešeno.</h3>
         <p>Teplý vzduch se musí odvádět ven — to platí pro každou mobilní klimatizaci. Proto ke každé objednávce přikládáme <b>okenní těsnicí sadu v&nbsp;hodnotě 590&nbsp;Kč zdarma</b>. Instalace bez vrtání za 5&nbsp;minut, funguje i&nbsp;na střešní okna.</p>
       </div>
@@ -431,14 +468,25 @@ footer a{color:#2F4C5E}
 <section class="section flush" id="objednat" aria-labelledby="cta-h">
   <div class="final-wrap">
     <div class="final reveal">
-      <h2 id="cta-h">Další vlna veder je otázkou dnů.</h2>
-      <p>Objednejte dnes a&nbsp;SEVERKA 12 chladí vaši ložnici do 48&nbsp;hodin — včetně okenní těsnicí sady zdarma.</p>
-      <!-- fáze 2: nahradit odkazem do pokladny (Stripe Checkout / GoPay) -->
-      <button class="btn" type="button" id="order">Objednat za 6&nbsp;990&nbsp;Kč</button>
-      <div class="micro">
-        <span>Skladem 14 ks</span>
-        <span>Doprava zdarma</span>
-        <span>Platba kartou i&nbsp;na dobírku</span>
+      <div class="shot shot--packshot">
+        <picture>
+          <source type="image/avif" srcset="img/packshot-800.avif 800w, img/packshot-1200.avif 1200w" sizes="380px">
+          <source type="image/webp" srcset="img/packshot-800.webp 800w, img/packshot-1200.webp 1200w" sizes="380px">
+          <img src="img/packshot-800.jpg" srcset="img/packshot-800.jpg 800w, img/packshot-1200.jpg 1200w" sizes="380px"
+               width="1200" height="1200" loading="lazy" decoding="async"
+               alt="Mobilní klimatizace SEVERKA 12 — bílá jednotka na kolečkách s hadicí pro odvod teplého vzduchu">
+        </picture>
+      </div>
+      <div>
+        <h2 id="cta-h">Další vlna veder je otázkou dnů.</h2>
+        <p>Objednejte dnes a&nbsp;SEVERKA 12 chladí vaši ložnici do 48&nbsp;hodin — včetně okenní těsnicí sady zdarma.</p>
+        <!-- fáze 2: nahradit odkazem do pokladny (Stripe Checkout / GoPay) -->
+        <button class="btn" type="button" id="order">Objednat za 6&nbsp;990&nbsp;Kč</button>
+        <div class="micro">
+          <span>Skladem 14 ks</span>
+          <span>Doprava zdarma</span>
+          <span>Platba kartou i&nbsp;na dobírku</span>
+        </div>
       </div>
     </div>
   </div>
@@ -465,6 +513,11 @@ footer a{color:#2F4C5E}
   "name": "SEVERKA 12 — mobilní klimatizace 12 000 BTU",
   "description": "Mobilní klimatizace 12 000 BTU pro místnosti do 35 m². Bez montáže a vrtání, instalace do 10 minut, provoz cca 3 Kč za hodinu. Okenní těsnicí sada v ceně.",
   "sku": "SEVERKA-12",
+  "image": [
+    "https://severka.cz/img/packshot-1200.jpg",
+    "https://severka.cz/img/hero-loznice-1600.jpg",
+    "https://severka.cz/img/tesnici-sada-1200.jpg"
+  ],
   "brand": { "@type": "Brand", "name": "SEVERKA" },
   "category": "Mobilní klimatizace",
   "offers": {

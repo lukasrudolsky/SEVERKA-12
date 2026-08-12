@@ -9,8 +9,29 @@ copy a design systém vychází z prototypu [`docs/severka-landing-prototyp.html
 | Soubor | Účel |
 | --- | --- |
 | `index.html` | Kompletní landing page — inline CSS + vanilla JS, žádný build step |
+| `img/` | Vygenerované fotky (AVIF + WebP + JPEG, 3 šířky) — **nikdy needituj ručně** |
+| `img-source/` | Zdrojová PNG + návod na pojmenování |
+| `scripts/build-images.mjs` | Konverze zdrojů do `img/` (`npm run images`) |
 | `vercel.json` | Cache a bezpečnostní hlavičky pro nasazení na Vercel |
 | `docs/` | Zadání a původní prototyp (referenční, nenasazuje se) |
+
+## Fotky
+
+```bash
+npm install
+npm run images:check   # co chybí v img-source/
+npm run images         # konverze do img/
+```
+
+Skript ořezává na poměr podle umístění (hero 3:2 na desktopu a 4:5 na mobilu,
+srovnání 2:1, karty 16:10, širokoúhlé 16:9, packshot 1:1 + og 1200×630),
+generuje AVIF + WebP + JPEG v kvalitě 80 ve třech šířkách a u hero snižuje
+kvalitu AVIF, dokud se nevejde pod 120 kB kvůli LCP. Kde je hlavní motiv mimo
+střed, posouvá ořezové okno položka `focus` v tabulce `IMAGES`.
+
+**Dokud v `img-source/` nejsou zdrojová PNG, `img/` obsahuje zástupné obrázky**
+s přerušovaným rámečkem a názvem souboru. Drží správné rozměry (CLS = 0), ale
+do produkce nepatří.
 
 ## Spuštění a nasazení
 
@@ -39,7 +60,9 @@ Lighthouse 13 (headless Chromium, lokální server, mobile i desktop preset):
 \* Jediný odečet je „errors in console“ — v testovacím sandboxu není dostupná síť pro
 `fonts.googleapis.com`. Po nasazení se fonty načtou a audit projde čistý.
 
-axe-core: **0 porušení** na 1280 px i 360 px (rozbalené FAQ, odkryté sekce).
+LCP 0,9 s · **CLS 0** · TBT 20 ms. axe-core: **0 porušení** na 1280 px i 360 px
+(rozbalené FAQ, odkryté sekce). Měřeno se zástupnými obrázky — po dodání reálných
+fotek změř znovu, hlavně LCP; limit 120 kB na hero AVIF hlídá build skript.
 
 ## Rozhodnutí a odchylky od zadání
 
@@ -60,13 +83,26 @@ axe-core: **0 porušení** na 1280 px i 360 px (rozbalené FAQ, odkryté sekce).
   `aggregateRating` a `review` **záměrně chybí** — recenze na stránce jsou zatím zástupné
   a strukturovaná data s vymyšleným hodnocením jsou porušení pravidel Google.
 
+## Otevřený konflikt: 1330 W vs. 1,0 kW
+
+Na fotce ovládacího panelu (`panel-sleep`) je vytištěno **„1330W“**, stránka ale
+na třech místech uvádí **příkon 1,0 kW a provoz 3 Kč/hod** (benefit, karta
+„Spotřeba? Spočítaná.“, FAQ „Kolik reálně zaplatím za elektřinu“). To si
+odporuje a po potvrzení reálných parametrů zboží by šlo o klamavý údaj.
+Stránka se nesmí nasadit, dokud se nevybere jedna z variant:
+
+- **A — opravit fotku:** přegenerovat panel bez textu „1330W“. V kódu se nemění nic.
+- **B — opravit copy:** pokud má produkt reálně ~1,3 kW, globálně přepsat
+  „3 Kč/hod“ → „4 Kč/hod“, „Příkon 1,0 kW“ → „Příkon 1,3 kW“, noc 24 Kč → 32 Kč
+  (hero benefit, karta „Spotřeba? Spočítaná.“, FAQ).
+
 ## TODO před ostrým spuštěním
 
 - [ ] Doplnit provozovatele v patičce (jméno, IČO, adresa) a odkazy na OP / reklamační řád / GDPR
 - [ ] Nahradit zástupné recenze reálnými (Ověřeno zákazníky) — pak lze doplnit `aggregateRating`
-- [ ] Nahradit `og:image` a `canonical` reálnou doménou; nahrát OG obrázek 1200 × 630
-- [ ] Reálné fotky do připravených `<picture>` slotů (hledej `FOTO SLOT` v `index.html`):
-      AVIF + WebP + JPG fallback, explicitní `width`/`height`, `loading="lazy"` mimo hero
+- [ ] Nahradit `canonical` a absolutní URL v `og:image` / JSON-LD reálnou doménou
+- [ ] Dodat zdrojová PNG do `img-source/` a spustit `npm run images` (teď jsou v `img/` zástupné obrázky)
+- [ ] Vyřešit konflikt 1330 W / 1,0 kW (viz výše) — bez toho stránku nenasazovat
 - [ ] Ověřit reálný stav skladu v microcopy („Skladem 14 ks“)
 
 ## Fáze 2
