@@ -103,6 +103,11 @@ mobilu, 616 kB na desktopu včetně hero videa. axe-core: **0 porušení** na
 - Ze stejného důvodu je zlatá u hvězdiček ztmavena na `--star` (#A15C00) a čísla v tmavé
   sekci „Problém“ používají světlejší odstín `--heat` (#F5804F, 5,4 : 1 na tmavém pozadí).
   `--heat` se dál používá jen pro „horko/problém“ momenty.
+- **Menu v hlavičce** je nad rámec zadání (to počítalo jen s logem a CTA). Na desktopu
+  jsou to čtyři kotvy (Co získáte · Srovnání · Recenze · Časté dotazy) se zvýrazněním
+  sekce, ve které se čtenář právě nachází, na mobilu panel pod hlavičkou. Zavírá se
+  klikem na odkaz, Esc (fokus se vrátí na tlačítko), klikem mimo i při zvětšení okna
+  nad 860 px. Bez JS zůstane hlavička v původní podobě — logo a CTA.
 - **Bez JS a s `prefers-reduced-motion`** stránka rovnou zobrazuje vychlazený stav
   (23,0 °C, ledové pozadí); teploměr i scroll-reveal jsou progresivní vylepšení, obsah není
   nikdy schovaný za JavaScriptem. Animace teploměru proběhne jen jednou.

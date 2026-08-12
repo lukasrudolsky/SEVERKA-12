@@ -75,6 +75,23 @@ header.scrolled{border-bottom:1px solid var(--mist);box-shadow:0 4px 18px rgba(1
 .nav{display:flex;align-items:center;justify-content:space-between;height:64px;gap:12px}
 .logo{font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:.02em;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:9px}
 .logo svg{width:26px;height:26px}
+
+/* ---------- navigace ---------- */
+.nav-menu ul{display:flex;align-items:center;gap:28px;list-style:none}
+.nav-menu a{color:var(--ink);text-decoration:none;font-size:15px;font-weight:500;padding:4px 0;border-bottom:2px solid transparent;transition:color .15s, border-color .15s}
+.nav-menu a:hover{color:var(--deep)}
+.nav-menu a[aria-current="location"]{color:var(--deep);border-bottom-color:var(--glacier)}
+.nav-toggle{display:none;align-items:center;justify-content:center;width:44px;height:44px;background:none;border:0;cursor:pointer;color:var(--ink);border-radius:10px}
+.nav-toggle:hover{background:var(--mist)}
+.nav-toggle span{display:block;width:20px;height:2px;background:currentColor;border-radius:2px;position:relative;transition:background .15s}
+.nav-toggle span::before,.nav-toggle span::after{content:"";position:absolute;left:0;width:20px;height:2px;background:currentColor;border-radius:2px;transition:transform .2s}
+.nav-toggle span::before{top:-6px}
+.nav-toggle span::after{top:6px}
+.nav-toggle[aria-expanded="true"] span{background:transparent}
+.nav-toggle[aria-expanded="true"] span::before{transform:translateY(6px) rotate(45deg)}
+.nav-toggle[aria-expanded="true"] span::after{transform:translateY(-6px) rotate(-45deg)}
+/* kotvy nesmí zmizet pod sticky hlavičkou */
+section[id],div[id]{scroll-margin-top:84px}
 .btn{display:inline-block;background:var(--deep);color:#fff;text-decoration:none;font-weight:600;padding:13px 26px;border-radius:999px;transition:background .2s, transform .15s;border:0;cursor:pointer;font-size:16px;font-family:var(--body);line-height:1.25;text-align:center}
 .btn:hover{background:var(--deeper);transform:translateY(-1px)}
 .btn.small{padding:9px 20px;font-size:14px}
@@ -202,6 +219,16 @@ footer a{color:#2F4C5E}
   .btn:hover{transform:none}
 }
 @media (max-width:860px){
+  /* menu se sbalí do panelu pod hlavičkou */
+  .nav-toggle{display:inline-flex;order:3}
+  .nav .btn.small{order:2}
+  .nav-menu{order:4;position:absolute;top:64px;left:0;right:0;background:var(--surface);
+    border-bottom:1px solid var(--mist);box-shadow:0 14px 28px rgba(12,34,51,.1);display:none}
+  .nav-menu.open{display:block}
+  .nav-menu ul{flex-direction:column;align-items:stretch;gap:0;padding:6px 20px 14px}
+  .nav-menu li+li a{border-top:1px solid var(--mist)}
+  .nav-menu a{display:block;padding:15px 0;font-size:16px;border-bottom:0}
+  .nav-menu a[aria-current="location"]{border-bottom:0}
   .hero .wrap{grid-template-columns:1fr;gap:36px}
   .pain-grid,.bene-grid,.honest-grid,.rev-grid{grid-template-columns:1fr}
   .section{padding:56px 0}
@@ -230,6 +257,17 @@ footer a{color:#2F4C5E}
       <svg viewBox="0 0 24 24" width="26" height="26" fill="none" aria-hidden="true"><path d="M12 2v20M12 2l-3 3M12 2l3 3M12 22l-3-3M12 22l3-3M3.5 7l17 10M3.5 7l-.4 4.2M3.5 7l4.1-.9M20.5 17l.4-4.2M20.5 17l-4.1.9M20.5 7l-17 10M20.5 7l.4 4.2M20.5 7l-4.1-.9M3.5 17l-.4-4.2M3.5 17l4.1.9" stroke="#1B7FC4" stroke-width="1.6" stroke-linecap="round"/></svg>
       SEVERKA
     </a>
+    <button class="nav-toggle" type="button" id="navToggle" aria-expanded="false" aria-controls="navMenu" aria-label="Menu">
+      <span aria-hidden="true"></span>
+    </button>
+    <nav class="nav-menu" id="navMenu" aria-label="Hlavní navigace">
+      <ul>
+        <li><a href="#benefity">Co získáte</a></li>
+        <li><a href="#srovnani">Srovnání</a></li>
+        <li><a href="#recenze">Recenze</a></li>
+        <li><a href="#faq">Časté dotazy</a></li>
+      </ul>
+    </nav>
     <a class="btn small" href="#objednat">Objednat</a>
   </div>
 </header>
@@ -312,7 +350,7 @@ footer a{color:#2F4C5E}
 </section>
 
 <!-- 5. BENEFITY -->
-<section class="section" aria-labelledby="bene-h">
+<section class="section" id="benefity" aria-labelledby="bene-h">
   <div class="wrap">
     <span class="eyebrow">Co získáte</span>
     <h2 id="bene-h">Tři čísla, na kterých záleží.</h2>
@@ -337,7 +375,7 @@ footer a{color:#2F4C5E}
 </section>
 
 <!-- 6. SROVNÁNÍ -->
-<section class="section flush" aria-labelledby="cmp-h">
+<section class="section flush" id="srovnani" aria-labelledby="cmp-h">
   <div class="wrap">
     <span class="eyebrow">Srovnání</span>
     <h2 id="cmp-h">Ventilátor fouká. Klimatizace chladí.</h2>
@@ -413,7 +451,7 @@ footer a{color:#2F4C5E}
 </section>
 
 <!-- 8. RECENZE -->
-<section class="section" aria-labelledby="rev-h">
+<section class="section" id="recenze" aria-labelledby="rev-h">
   <div class="wrap">
     <span class="eyebrow">Recenze zákazníků</span>
     <h2 id="rev-h">Jak se se SEVERKOU spí ostatním.</h2>
@@ -439,7 +477,7 @@ footer a{color:#2F4C5E}
 </section>
 
 <!-- 9. FAQ -->
-<section class="section flush" aria-labelledby="faq-h">
+<section class="section flush" id="faq" aria-labelledby="faq-h">
   <div class="wrap narrow">
     <span class="eyebrow">Časté dotazy</span>
     <h2 id="faq-h">Na co se ptáte nejčastěji.</h2>
@@ -558,6 +596,48 @@ footer a{color:#2F4C5E}
   window.addEventListener('scroll', function(){
     hdr.classList.toggle('scrolled', window.scrollY > 8);
   }, {passive:true});
+
+  /* menu: na mobilu panel pod hlavičkou */
+  var toggle = document.getElementById('navToggle');
+  var menu = document.getElementById('navMenu');
+  function closeMenu(focusToggle){
+    if (toggle.getAttribute('aria-expanded') !== 'true') return;
+    toggle.setAttribute('aria-expanded','false');
+    menu.classList.remove('open');
+    if (focusToggle) toggle.focus();
+  }
+  toggle.addEventListener('click', function(){
+    var open = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', String(!open));
+    menu.classList.toggle('open', !open);
+  });
+  menu.addEventListener('click', function(e){ if (e.target.closest('a')) closeMenu(false); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeMenu(true); });
+  document.addEventListener('click', function(e){
+    if (!menu.contains(e.target) && !toggle.contains(e.target)) closeMenu(false);
+  });
+  window.matchMedia('(min-width:861px)').addEventListener('change', function(e){ if (e.matches) closeMenu(false); });
+
+  /* zvýraznění sekce, ve které zrovna jsme */
+  var links = [].slice.call(menu.querySelectorAll('a'));
+  var targets = links.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+  if ('IntersectionObserver' in window){
+    var visible = [];
+    var spy = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        var i = visible.indexOf(en.target);
+        if (en.isIntersecting && i < 0) visible.push(en.target);
+        else if (!en.isIntersecting && i >= 0) visible.splice(i, 1);
+      });
+      /* poslední v pořadí dokumentu = ta, do které jsme právě dorolovali */
+      var current = targets.filter(function(t){ return visible.indexOf(t) >= 0; }).pop();
+      links.forEach(function(a, i){
+        if (targets[i] === current) a.setAttribute('aria-current','location');
+        else a.removeAttribute('aria-current');
+      });
+    }, {rootMargin:'-84px 0px -55% 0px'});
+    targets.forEach(function(t){ if (t) spy.observe(t); });
+  }
 
   /* teploměr: 32,6 -> 23,0 °C, jen jednou; bez JS i s reduced-motion zůstává 23,0 °C */
   var el = document.getElementById('thermoVal');
